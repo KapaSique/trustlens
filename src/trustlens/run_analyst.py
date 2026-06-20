@@ -8,11 +8,14 @@ Requires GEMINI_API_KEY in the environment (or a .env file).
 import asyncio
 import sys
 
+from dotenv import load_dotenv
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
 
 from trustlens.agents.analyst import build_analyst
+
+load_dotenv()  # picks up GEMINI_API_KEY from a local .env if present
 
 
 async def answer(question: str) -> str:
