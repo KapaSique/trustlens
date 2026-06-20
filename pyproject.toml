@@ -1,0 +1,22 @@
+[project]
+name = "trustlens"
+version = "0.1.0"
+description = "Trustworthy Insights Agent — multi-agent BI with answer verification"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "google-adk>=1.0.0",
+    "mcp>=1.2.0",
+    "pandas>=2.2.0",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.0", "ruff>=0.6", "pytest-asyncio>=0.24"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+asyncio_mode = "auto"
