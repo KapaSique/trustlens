@@ -1,0 +1,122 @@
+[
+  {
+    "question": "What is the total revenue (sum of item prices) across all orders?",
+    "sql": "SELECT SUM(price) AS total_revenue FROM order_items",
+    "truth": 13591643.7
+  },
+  {
+    "question": "What is the total revenue from delivered orders only?",
+    "sql": "SELECT SUM(oi.price) AS delivered_revenue FROM order_items oi JOIN orders o ON oi.order_id = o.order_id WHERE o.order_status = 'delivered'",
+    "truth": 13221498.11
+  },
+  {
+    "question": "How much revenue was lost to canceled orders?",
+    "sql": "SELECT SUM(oi.price) AS canceled_revenue FROM order_items oi JOIN orders o ON oi.order_id = o.order_id WHERE o.order_status = 'canceled'",
+    "truth": 95235.27
+  },
+  {
+    "question": "What was the total item revenue from orders purchased in 2018?",
+    "sql": "SELECT SUM(oi.price) AS revenue_2018 FROM order_items oi JOIN orders o ON oi.order_id = o.order_id WHERE o.order_purchase_timestamp >= '2018-01-01' AND o.order_purchase_timestamp < '2019-01-01'",
+    "truth": 7386050.8
+  },
+  {
+    "question": "How many orders are in total in the dataset?",
+    "sql": "SELECT COUNT(*) AS total_orders FROM orders",
+    "truth": 99441.0
+  },
+  {
+    "question": "How many orders have been successfully delivered?",
+    "sql": "SELECT COUNT(*) AS delivered_orders FROM orders WHERE order_status = 'delivered'",
+    "truth": 96478.0
+  },
+  {
+    "question": "How many orders were canceled?",
+    "sql": "SELECT COUNT(*) AS canceled_orders FROM orders WHERE order_status = 'canceled'",
+    "truth": 625.0
+  },
+  {
+    "question": "How many order line items were sold across all orders?",
+    "sql": "SELECT COUNT(*) AS total_order_items FROM order_items",
+    "truth": 112650.0
+  },
+  {
+    "question": "What is the average item price across all order items?",
+    "sql": "SELECT AVG(price) AS avg_price FROM order_items",
+    "truth": 120.65373901464713
+  },
+  {
+    "question": "What is the average freight value for items belonging to delivered orders?",
+    "sql": "SELECT AVG(oi.freight_value) AS avg_freight FROM order_items oi JOIN orders o ON oi.order_id = o.order_id WHERE o.order_status = 'delivered'",
+    "truth": 19.948597874715283
+  },
+  {
+    "question": "What is the average item price for orders purchased in the year 2017?",
+    "sql": "SELECT AVG(oi.price) AS avg_price FROM order_items oi JOIN orders o ON oi.order_id = o.order_id WHERE strftime('%Y', o.order_purchase_timestamp) = '2017'",
+    "truth": 121.02483052846809
+  },
+  {
+    "question": "What is the average freight value charged on canceled orders?",
+    "sql": "SELECT AVG(oi.freight_value) AS avg_freight FROM order_items oi JOIN orders o ON oi.order_id = o.order_id WHERE o.order_status = 'canceled'",
+    "truth": 19.650276752767528
+  },
+  {
+    "question": "What is the total sales revenue for products in the 'cama_mesa_banho' category?",
+    "sql": "SELECT ROUND(SUM(oi.price), 2) AS total_revenue FROM order_items oi JOIN products p ON oi.product_id = p.product_id WHERE p.product_category_name = 'cama_mesa_banho'",
+    "truth": 1036988.68
+  },
+  {
+    "question": "What is the average item price for products in the 'beleza_saude' category?",
+    "sql": "SELECT ROUND(AVG(oi.price), 2) AS avg_item_price FROM order_items oi JOIN products p ON oi.product_id = p.product_id WHERE p.product_category_name = 'beleza_saude'",
+    "truth": 130.16
+  },
+  {
+    "question": "How many distinct delivered orders contained a product from the 'esporte_lazer' category?",
+    "sql": "SELECT COUNT(DISTINCT oi.order_id) AS delivered_orders FROM order_items oi JOIN products p ON oi.product_id = p.product_id JOIN orders o ON oi.order_id = o.order_id WHERE p.product_category_name = 'esporte_lazer' AND o.order_status = 'delivered'",
+    "truth": 7530.0
+  },
+  {
+    "question": "What is the average freight value for 'moveis_decoracao' items on orders purchased in 2018?",
+    "sql": "SELECT ROUND(AVG(oi.freight_value), 2) AS avg_freight FROM order_items oi JOIN products p ON oi.product_id = p.product_id JOIN orders o ON oi.order_id = o.order_id WHERE p.product_category_name = 'moveis_decoracao' AND strftime('%Y', o.order_purchase_timestamp) = '2018'",
+    "truth": 21.81
+  },
+  {
+    "question": "What is the total freight value collected across all order items?",
+    "sql": "SELECT SUM(freight_value) AS total_freight FROM order_items",
+    "truth": 2251909.54
+  },
+  {
+    "question": "What is the average freight value per order item for orders that were delivered?",
+    "sql": "SELECT AVG(oi.freight_value) AS avg_freight_delivered FROM order_items oi JOIN orders o ON oi.order_id = o.order_id WHERE o.order_status = 'delivered'",
+    "truth": 19.948597874715283
+  },
+  {
+    "question": "What is the total freight value for order items in the 'cama_mesa_banho' product category?",
+    "sql": "SELECT SUM(oi.freight_value) AS total_freight FROM order_items oi JOIN products p ON oi.product_id = p.product_id WHERE p.product_category_name = 'cama_mesa_banho'",
+    "truth": 204693.04
+  },
+  {
+    "question": "What is the average freight value per order item for orders purchased in 2017?",
+    "sql": "SELECT AVG(oi.freight_value) AS avg_freight_2017 FROM order_items oi JOIN orders o ON oi.order_id = o.order_id WHERE o.order_purchase_timestamp >= '2017-01-01' AND o.order_purchase_timestamp < '2018-01-01'",
+    "truth": 19.402041719094054
+  },
+  {
+    "question": "How many orders with status 'delivered' were placed in 2017?",
+    "sql": "SELECT COUNT(*) FROM orders WHERE order_status = 'delivered' AND substr(order_purchase_timestamp,1,4) = '2017'",
+    "truth": 43428.0
+  },
+  {
+    "question": "What was the total product revenue for orders placed in 2018?",
+    "sql": "SELECT ROUND(SUM(oi.price), 2) FROM order_items oi JOIN orders o ON oi.order_id = o.order_id WHERE substr(o.order_purchase_timestamp,1,4) = '2018'",
+    "truth": 7386050.8
+  },
+  {
+    "question": "What was the average freight value per order item for orders placed in 2017?",
+    "sql": "SELECT ROUND(AVG(oi.freight_value), 2) FROM order_items oi JOIN orders o ON oi.order_id = o.order_id WHERE substr(o.order_purchase_timestamp,1,4) = '2017'",
+    "truth": 19.4
+  },
+  {
+    "question": "How many orders were canceled (status 'canceled') in 2018?",
+    "sql": "SELECT COUNT(*) FROM orders WHERE order_status = 'canceled' AND substr(order_purchase_timestamp,1,4) = '2018'",
+    "truth": 334.0
+  }
+]
