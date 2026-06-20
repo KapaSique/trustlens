@@ -19,8 +19,12 @@ INSTRUCTION = (
 )
 
 
-def build_analyst() -> tuple[LlmAgent, McpToolset]:
-    """Construct the Analyst agent wired to the TrustLens MCP server over stdio."""
+def build_analyst(output_key: str | None = None) -> tuple[LlmAgent, McpToolset]:
+    """Construct the Analyst agent wired to the TrustLens MCP server over stdio.
+
+    Pass output_key (e.g. "findings") to save the analyst's output to session
+    state for a downstream agent in a SequentialAgent pipeline.
+    """
     toolset = McpToolset(
         connection_params=StdioConnectionParams(
             server_params=StdioServerParameters(
@@ -35,5 +39,6 @@ def build_analyst() -> tuple[LlmAgent, McpToolset]:
         name="analyst",
         instruction=INSTRUCTION,
         tools=[toolset],
+        output_key=output_key,
     )
     return agent, toolset
