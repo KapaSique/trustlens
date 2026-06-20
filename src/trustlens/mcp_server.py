@@ -12,14 +12,22 @@ from pathlib import Path
 from mcp.server.fastmcp import FastMCP
 
 from trustlens import db
+from trustlens.audit import audit_append
 from trustlens.security import SecurityError, check_query
 
 DB_PATH = os.environ.get(
     "TRUSTLENS_DB",
     str(Path(__file__).resolve().parents[2] / "data" / "trustlens.db"),
 )
+AUDIT_PATH = os.environ.get("TRUSTLENS_AUDIT")  # if set, every query is logged here
 
 mcp = FastMCP("trustlens-data")
+
+
+def _audit(action: str, detail: str, outcome: str) -> None:
+    """Record a data action to the audit file if TRUSTLENS_AUDIT is configured."""
+    if AUDIT_PATH:
+        audit_append(AUDIT_PATH, "analyst", action, detail, outcome)
 
 
 @mcp.tool()
@@ -36,14 +44,19 @@ def query_data(sql: str) -> str:
     are blocked. Returns {"rows": [...]} on success or {"error": "..."} on
     rejection so the agent can revise its SQL.
     """
+    outcome = "ok"
     try:
         check_query(sql)
         rows = db.read_query(DB_PATH, sql).to_dict(orient="records")
-        return json.dumps({"rows": rows})
+        result = json.dumps({"rows": rows})
     except SecurityError as e:
-        return json.dumps({"error": f"blocked: {e}"})
+        outcome = "blocked"
+        result = json.dumps({"error": f"blocked: {e}"})
     except Exception as e:  # malformed SQL, missing table, etc.
-        return json.dumps({"error": str(e)})
+        outcome = "error"
+        result = json.dumps({"error": str(e)})
+    _audit("query_data", sql, outcome)
+    return result
 
 
 if __name__ == "__main__":

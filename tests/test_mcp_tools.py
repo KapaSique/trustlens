@@ -4,6 +4,7 @@ import sqlite3
 import pandas as pd
 
 from trustlens import db, mcp_server
+from trustlens.audit import load_audit
 
 
 def _seed(tmp_path):
@@ -54,3 +55,16 @@ def test_get_schema_tool_returns_tables(tmp_path, monkeypatch):
     monkeypatch.setattr(mcp_server, "DB_PATH", path)
     out = json.loads(mcp_server.get_schema())
     assert "orders" in out
+
+
+def test_query_data_writes_audit(tmp_path, monkeypatch):
+    path = _seed(tmp_path)
+    monkeypatch.setattr(mcp_server, "DB_PATH", path)
+    audit_file = str(tmp_path / "audit.jsonl")
+    monkeypatch.setattr(mcp_server, "AUDIT_PATH", audit_file)
+    mcp_server.query_data("SELECT region FROM orders")
+    mcp_server.query_data("DROP TABLE orders")
+    log = load_audit(audit_file)
+    assert len(log) == 2
+    assert log.entries()[0].outcome == "ok"
+    assert log.entries()[1].outcome == "blocked"

@@ -1,6 +1,6 @@
 import json
 
-from trustlens.audit import AuditLog
+from trustlens.audit import AuditLog, audit_append, load_audit
 
 
 def test_audit_records_entries():
@@ -31,3 +31,14 @@ def test_audit_summary_counts_outcomes():
     assert summary["ok"] == 1
     assert summary["mismatch"] == 1
     assert summary["blocked"] == 1
+
+
+def test_audit_append_and_load_roundtrip(tmp_path):
+    path = str(tmp_path / "audit.jsonl")
+    audit_append(path, "analyst", "query_data", "SELECT 1", "ok")
+    audit_append(path, "security", "query_data", "DROP TABLE x", "blocked")
+    log = load_audit(path)
+    assert len(log) == 2
+    assert log.entries()[0].actor == "analyst"
+    assert log.entries()[1].outcome == "blocked"
+    assert log.summary() == {"ok": 1, "blocked": 1}

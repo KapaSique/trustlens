@@ -46,3 +46,21 @@ class AuditLog:
 
     def __len__(self) -> int:
         return len(self._entries)
+
+
+def audit_append(path: str, actor: str, action: str, detail: str, outcome: str) -> None:
+    """Append one action as a JSON line to an audit file (survives subprocesses)."""
+    entry = AuditEntry(actor, action, detail, outcome, time.time())
+    with open(path, "a") as f:
+        f.write(json.dumps(asdict(entry)) + "\n")
+
+
+def load_audit(path: str) -> AuditLog:
+    """Load an AuditLog from a JSONL audit file written by audit_append."""
+    log = AuditLog()
+    with open(path) as f:
+        for raw in f:
+            line = raw.strip()
+            if line:
+                log._entries.append(AuditEntry(**json.loads(line)))
+    return log
