@@ -7,6 +7,8 @@ from google.adk.tools.mcp_tool import McpToolset
 from google.adk.tools.mcp_tool.mcp_session_manager import StdioConnectionParams
 from mcp import StdioServerParameters
 
+from trustlens.model_config import MODEL, resilient_config
+
 _SERVER = str(Path(__file__).resolve().parents[1] / "mcp_server.py")
 
 INSTRUCTION = (
@@ -35,10 +37,11 @@ def build_analyst(output_key: str | None = None) -> tuple[LlmAgent, McpToolset]:
         tool_filter=["get_schema", "query_data"],
     )
     agent = LlmAgent(
-        model="gemini-flash-latest",
+        model=MODEL,
         name="analyst",
         instruction=INSTRUCTION,
         tools=[toolset],
         output_key=output_key,
+        generate_content_config=resilient_config(),
     )
     return agent, toolset

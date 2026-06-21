@@ -2,6 +2,8 @@
 
 from google.adk.agents import LlmAgent
 
+from trustlens.model_config import MODEL, resilient_config
+
 INSTRUCTION = (
     "You are a business analyst writing the final report. "
     "You are given the analyst findings in {findings} and the verification results "
@@ -14,8 +16,9 @@ INSTRUCTION = (
 def build_reporter() -> LlmAgent:
     """Construct the Reporter agent. Saves its report to state['report']."""
     return LlmAgent(
-        model="gemini-flash-latest",
+        model=MODEL,
         name="reporter",
         instruction=INSTRUCTION,
         output_key="report",
+        generate_content_config=resilient_config(),
     )

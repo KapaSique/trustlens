@@ -10,6 +10,7 @@ from pathlib import Path
 
 from google.adk.agents import LlmAgent
 
+from trustlens.model_config import MODEL, resilient_config
 from trustlens.verification import verify_numeric_claim
 
 DB_PATH = os.environ.get(
@@ -38,9 +39,10 @@ INSTRUCTION = (
 def build_verifier() -> LlmAgent:
     """Construct the Verifier agent. Saves its summary to state['verification']."""
     return LlmAgent(
-        model="gemini-flash-latest",
+        model=MODEL,
         name="verifier",
         instruction=INSTRUCTION,
         tools=[verify_claim],
         output_key="verification",
+        generate_content_config=resilient_config(),
     )
