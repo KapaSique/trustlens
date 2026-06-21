@@ -1,0 +1,44 @@
+<svg width="100%" viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TrustLens — the insights agent you can actually trust">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1220"/>
+      <stop offset="55%" stop-color="#111c33"/>
+      <stop offset="100%" stop-color="#0f2530"/>
+    </linearGradient>
+    <linearGradient id="acc" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="300" rx="24" fill="url(#bg)"/>
+
+  <g fill="#22d3ee" opacity="0.10">
+    <circle cx="980" cy="70" r="3"/><circle cx="1030" cy="70" r="3"/><circle cx="1080" cy="70" r="3"/><circle cx="1130" cy="70" r="3"/>
+    <circle cx="980" cy="120" r="3"/><circle cx="1030" cy="120" r="3"/><circle cx="1080" cy="120" r="3"/><circle cx="1130" cy="120" r="3"/>
+    <circle cx="980" cy="170" r="3"/><circle cx="1030" cy="170" r="3"/><circle cx="1080" cy="170" r="3"/><circle cx="1130" cy="170" r="3"/>
+    <circle cx="980" cy="220" r="3"/><circle cx="1030" cy="220" r="3"/><circle cx="1080" cy="220" r="3"/><circle cx="1130" cy="220" r="3"/>
+  </g>
+
+  <g>
+    <circle cx="140" cy="142" r="58" fill="none" stroke="url(#acc)" stroke-width="9"/>
+    <line x1="182" y1="184" x2="226" y2="228" stroke="url(#acc)" stroke-width="13" stroke-linecap="round"/>
+    <path d="M110 144 L132 167 L172 118" fill="none" stroke="#34d399" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <text x="272" y="138" font-family="'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="76" font-weight="800" fill="#f8fafc" letter-spacing="-1">TrustLens</text>
+  <text x="274" y="182" font-family="'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="25" font-weight="400" fill="#94a3b8">The insights agent you can actually trust</text>
+
+  <g font-family="'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="14" font-weight="600">
+    <rect x="274" y="208" width="62" height="30" rx="15" fill="#ffffff" fill-opacity="0.06" stroke="#22d3ee" stroke-opacity="0.35"/>
+    <text x="305" y="228" fill="#7dd3fc" text-anchor="middle">ADK</text>
+    <rect x="346" y="208" width="66" height="30" rx="15" fill="#ffffff" fill-opacity="0.06" stroke="#22d3ee" stroke-opacity="0.35"/>
+    <text x="379" y="228" fill="#7dd3fc" text-anchor="middle">MCP</text>
+    <rect x="422" y="208" width="96" height="30" rx="15" fill="#ffffff" fill-opacity="0.06" stroke="#34d399" stroke-opacity="0.40"/>
+    <text x="470" y="228" fill="#6ee7b7" text-anchor="middle">Verifier</text>
+    <rect x="528" y="208" width="100" height="30" rx="15" fill="#ffffff" fill-opacity="0.06" stroke="#34d399" stroke-opacity="0.40"/>
+    <text x="578" y="228" fill="#6ee7b7" text-anchor="middle">Security</text>
+  </g>
+
+  <text x="1140" y="276" font-family="'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569" text-anchor="end">Kaggle &#215; Google · AI Agents Capstone · Agents for Business</text>
+</svg>

@@ -1,10 +1,29 @@
-# TrustLens — the Insights Agent you can actually trust
+<div align="center">
 
-> A multi-agent business-intelligence system that **re-verifies every number before it shows it** — because hallucinating AI analytics can't be trusted with business decisions.
+<img src="assets/banner.svg" alt="TrustLens — the insights agent you can actually trust" width="100%">
 
-**Capstone — 5-Day AI Agents Intensive (Google × Kaggle) · Track: Agents for Business**
+<p>
+  <img alt="Python 3.12" src="https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white">
+  <img alt="Google ADK" src="https://img.shields.io/badge/Google%20ADK-2.3-4285F4?logo=google&logoColor=white">
+  <img alt="MCP" src="https://img.shields.io/badge/MCP-FastMCP-1f2937">
+  <img alt="Gemini" src="https://img.shields.io/badge/Gemini-flash-8E75B2?logo=googlegemini&logoColor=white">
+  <img alt="Tests" src="https://img.shields.io/badge/tests-26%20passing-2ea043">
+  <img alt="Ruff" src="https://img.shields.io/badge/lint-ruff-261230?logo=ruff&logoColor=D7FF64">
+  <img alt="Kaggle AI Agents Capstone" src="https://img.shields.io/badge/Kaggle-AI%20Agents%20Capstone-20BEFF?logo=kaggle&logoColor=white">
+</p>
+
+<p><b>A multi-agent BI system that re-verifies every number before it shows it</b><br>
+<sub>Capstone · 5-Day AI Agents Intensive (Google × Kaggle) · Track: Agents for Business</sub></p>
+
+</div>
 
 ---
+
+> **Judges — 60-second path** (no API key, no download required):
+>
+> ```bash
+> uv sync && uv run pytest -k "not smoke" && uv run python examples/demo_verifier.py
+> ```
 
 ## The problem
 
@@ -18,111 +37,106 @@ TrustLens is a four-agent pipeline where an independent **Verifier** re-checks e
    Business question (natural language)
             │
    ┌────────▼────────┐
-   │     Planner     │  decomposes the question into analysis steps      → state["plan"]
+   │     Planner     │  decomposes the question into steps        → state["plan"]
    └────────┬────────┘
    ┌────────▼────────┐
-   │     Analyst     │  queries the data via MCP tools (get_schema,      → state["findings"]
-   │                 │  query_data), returns figures + the SQL behind them
+   │     Analyst     │  queries data via MCP tools,               → state["findings"]
+   │                 │  returns figures + the SQL behind them
    └────────┬────────┘
    ┌────────▼────────┐
-   │   Verifier ★    │  re-executes each figure's SQL and compares to    → state["verification"]
-   │                 │  the claim — flags any mismatch as a hallucination
+   │     Verifier    │  re-executes each figure's SQL, compares   → state["verification"]
+   │   (the core)    │  to the claim, flags any mismatch
    └────────┬────────┘
    ┌────────▼────────┐
-   │    Reporter     │  writes the report using ONLY verified figures    → state["report"]
+   │     Reporter    │  writes the report using verified-only     → state["report"]
    └────────┬────────┘
             │
-   Verified business insight  +  audit trail
+   Verified insight  +  audit trail
 ```
 
 Every data access passes a **security gate** (read-only, no PII, single statement) and is recorded in an **audit log**.
 
-## Course concepts demonstrated (4 of the required ≥3)
+## How verification works — the differentiator
 
-| Concept | Where |
-|---|---|
-| **Multi-agent (ADK)** | `SequentialAgent` orchestrating Planner / Analyst / Verifier / Reporter (`src/trustlens/pipeline.py`) |
-| **MCP servers** | `src/trustlens/mcp_server.py` — a FastMCP server exposing `get_schema` and `query_data`, consumed by the Analyst via `McpToolset` over stdio |
-| **Agent skills / tools** | the Verifier's `verify_claim` tool; analytical querying as agent tools |
-| **Security** | `src/trustlens/security.py` (SELECT-only + PII gate), verification-as-trust-gate, `src/trustlens/audit.py` audit trail, secrets via `.env` (no keys in code) |
-
-## The differentiator: deterministic verification
-
-Most "self-checking" agents just ask the LLM again — which can hallucinate again. TrustLens re-runs the actual query:
+Most "self-checking" agents just ask the LLM again, which can hallucinate again. TrustLens re-runs the actual query and compares:
 
 ```text
 Top category by revenue: beleza_saude  (true revenue: 1,258,681.34)
 
-[honest claim]       analyst says 1,258,681.34 -> verified=True   (actual 1,258,681.34)
-[hallucinated claim] analyst says 1,485,243.98 -> verified=False  (actual 1,258,681.34)
-
-=> TrustLens rejects the hallucinated figure before it reaches the report.
+[honest claim]        analyst says 1,258,681.34  ->  verified = True
+[hallucinated claim]  analyst says 1,485,243.98  ->  verified = False   (actual 1,258,681.34)
 ```
 
-Reproduce it (no API key needed): `uv run python examples/demo_verifier.py`
+On an eval set of **24 diverse business questions** validated against real Olist data, the verifier catches **100% of injected hallucinations with 0% false rejects** — no API key needed:
 
-## Setup
+```bash
+uv run python eval/run_eval.py        # confirmed 24/24 · caught 24/24
+uv run python examples/demo_verifier.py
+```
+
+## Course concepts
+
+Four of the required ≥3 concepts, each load-bearing rather than decorative.
+
+| Concept | Where |
+| --- | --- |
+| Multi-agent (ADK) | `SequentialAgent` orchestrating Planner / Analyst / Verifier / Reporter — `src/trustlens/pipeline.py` |
+| MCP servers | a FastMCP server exposing `get_schema` and `query_data`, consumed by the Analyst via `McpToolset` over stdio — `src/trustlens/mcp_server.py` |
+| Agent skills / tools | the Verifier's `verify_claim` tool; analytical querying as agent tools |
+| Security | `security.py` (SELECT-only + PII gate), verification-as-trust-gate, `audit.py` trail, secrets via `.env` |
+
+## Quickstart
 
 Requires [uv](https://docs.astral.sh/uv/), Python 3.12, and a Gemini API key.
 
 ```bash
-# 1. install dependencies
-uv sync
+uv sync                                                                   # 1. dependencies
 
-# 2. get the data (Olist Brazilian e-commerce, 3 core tables)
 kaggle datasets download -d olistbr/brazilian-ecommerce -p data/raw --unzip
-uv run python data/load_olist.py        # builds data/trustlens.db
+uv run python data/load_olist.py                                          # 2. build data/trustlens.db
 
-# 3. add your Gemini key
-cp .env.example .env                     # then edit: GEMINI_API_KEY=...
+cp .env.example .env                                                      # 3. add GEMINI_API_KEY
 ```
 
-## Run
+Run it:
 
 ```bash
-# single Analyst (foundation)
 uv run python src/trustlens/run_analyst.py "Which order status is most common?"
-
-# full Planner -> Analyst -> Verifier -> Reporter pipeline
 uv run python src/trustlens/pipeline.py "What are the top 3 product categories by revenue?"
-
-# deterministic verifier demo (no key needed)
-uv run python examples/demo_verifier.py
+uv run python examples/demo_verifier.py                                   # no key needed
 ```
 
-> **Note on Gemini free tier:** `gemini-flash-latest` resolves to `gemini-3.5-flash`, limited to **5 requests/min and 20/day** on the free tier. A full 4-agent run uses ~8–15 calls, so use a paid tier (or run on Kaggle/Vertex) for repeated runs.
+> **Gemini free tier note.** All agents use `gemini-flash-latest`; the API's own rate-limit response reports it as `gemini-3.5-flash`, limited to 5 requests/min and 20/day on the free tier. A full 4-agent run uses ~8–15 calls, so use a paid tier (or Kaggle/Vertex) for repeated runs.
 
 ## Project structure
 
 ```
 src/trustlens/
-  db.py            # read-only SQLite access (?mode=ro)
-  security.py      # query policy gate: SELECT-only, single-statement, PII block
-  mcp_server.py    # FastMCP data server (get_schema, query_data)
-  verification.py  # deterministic numeric verifier (the differentiator)
-  audit.py         # append-only action audit log
-  agents/
-    planner.py     # decompose question -> plan
-    analyst.py     # query data via MCP -> findings
-    verifier.py    # re-check each figure -> verification
-    reporter.py    # verified-only report
-  pipeline.py      # SequentialAgent wiring + run_pipeline()
-  run_analyst.py   # single-agent entrypoint
-data/load_olist.py # build the SQLite db from Olist CSVs
-examples/demo_verifier.py
-tests/             # 22 unit + construct tests
+  db.py            read-only SQLite access (?mode=ro)
+  security.py      query gate: SELECT-only, single-statement, PII block
+  mcp_server.py    FastMCP data server (get_schema, query_data) + audit
+  verification.py  deterministic numeric verifier (the differentiator)
+  audit.py         append-only action audit log
+  eval.py          verifier eval (build set + measure catch rate)
+  agents/          planner · analyst · verifier · reporter
+  pipeline.py      SequentialAgent wiring + run_pipeline()
+  run_analyst.py   single-agent entrypoint
+data/load_olist.py build the SQLite db from Olist CSVs
+eval/              questions + run_eval.py
+examples/          demo_verifier.py
+tests/             26 unit + construct tests
 ```
 
 ## Testing
 
 ```bash
-uv run pytest -k "not smoke"   # 22 unit/construct tests, no API key needed
-uv run pytest                  # includes the live smoke test (needs GEMINI_API_KEY + quota)
+uv run pytest -k "not smoke"   # 26 tests, no API key needed
+uv run pytest                  # adds the live smoke test (needs GEMINI_API_KEY + quota)
 uv run ruff check src tests    # lint
 ```
 
-## Security notes
+## Security
 
-- The database is opened **read-only**; the security gate blocks any non-SELECT, multi-statement, or PII-column query before execution.
-- No API keys in code — `GEMINI_API_KEY` is loaded from `.env` (git-ignored).
+- `security.py` is a defense-in-depth heuristic gate, backed by a read-only (`mode=ro`) connection: it blocks non-SELECT, multi-statement, mutating-keyword, and PII-column queries before execution — and even if one slipped past, the read-only connection prevents any write. CTEs (`WITH … SELECT`) are allowed; matching is word-boundary based to avoid false positives on aliases. Adversarial cases live in `tests/test_security.py`.
+- No API keys in code — `GEMINI_API_KEY` loads from `.env` (git-ignored).
 - Every data action is recorded in the audit log for traceability.
