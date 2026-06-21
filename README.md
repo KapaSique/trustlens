@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/banner.svg" alt="TrustLens — the insights agent you can actually trust" width="100%">
+<img src="assets/banner.png" alt="TrustLens — the insights agent you can actually trust" width="100%">
 
 <p>
   <img alt="Python 3.12" src="https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white">
