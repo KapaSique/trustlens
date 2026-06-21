@@ -7,7 +7,7 @@
   <img alt="Google ADK" src="https://img.shields.io/badge/Google%20ADK-2.3-4285F4?logo=google&logoColor=white">
   <img alt="MCP" src="https://img.shields.io/badge/MCP-FastMCP-1f2937">
   <img alt="Gemini" src="https://img.shields.io/badge/Gemini-flash-8E75B2?logo=googlegemini&logoColor=white">
-  <img alt="Tests" src="https://img.shields.io/badge/tests-26%20passing-2ea043">
+  <img alt="Tests" src="https://img.shields.io/badge/tests-32%20passing-2ea043">
   <img alt="Ruff" src="https://img.shields.io/badge/lint-ruff-261230?logo=ruff&logoColor=D7FF64">
   <img alt="Kaggle AI Agents Capstone" src="https://img.shields.io/badge/Kaggle-AI%20Agents%20Capstone-20BEFF?logo=kaggle&logoColor=white">
 </p>
@@ -130,7 +130,7 @@ tests/             26 unit + construct tests
 ## Testing
 
 ```bash
-uv run pytest -k "not smoke"   # 26 tests, no API key needed
+uv run pytest -k "not smoke"   # 32 tests, no API key needed
 uv run pytest                  # adds the live smoke test (needs GEMINI_API_KEY + quota)
 uv run ruff check src tests    # lint
 ```
