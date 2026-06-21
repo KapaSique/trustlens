@@ -124,7 +124,7 @@ src/trustlens/
 data/load_olist.py build the SQLite db from Olist CSVs
 eval/              questions + run_eval.py
 examples/          demo_verifier.py
-tests/             26 unit + construct tests
+tests/             32 unit + construct tests
 ```
 
 ## Testing
