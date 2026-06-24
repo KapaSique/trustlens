@@ -1,0 +1,41 @@
+Live end-to-end run of the full 4-agent TrustLens pipeline.
+
+Command:
+  TRUSTLENS_MODEL=gemini-2.5-flash uv run python src/trustlens/pipeline.py \
+    "Which product category generated the most revenue, and how much did delivered orders generate in total?"
+
+(gemini-flash-latest currently 503s under load on the free tier; gemini-2.5-flash
+is set via TRUSTLENS_MODEL. Each agent retries 429/503 with exponential backoff.)
+
+================================================================================
+
+=== QUESTION ===
+Which product category generated the most revenue, and how much did delivered orders generate in total?
+
+=== PLAN (Planner) ===
+Here's how to break down that request:
+
+1.  Identify Top Revenue Category:
+    - Calculate the sum of item revenue for each product_category (joining order_items to products).
+    - Identify the product_category with the highest sum.
+2.  Total Revenue from Delivered Orders:
+    - Filter the orders table for order_status = 'delivered'.
+    - Sum the item revenue for those orders.
+
+=== FINDINGS (Analyst) ===
+The product category "beleza_saude" generated the most revenue, totaling 1,258,681.34.
+Delivered orders generated 13,221,498.11 in total.
+
+=== VERIFICATION (Verifier) ===
+The claim that "beleza_saude" generated the most revenue, totaling 1,258,681.34, was REJECTED due to a mismatch.
+The claim that delivered orders generated 13,221,498.11 in total was VERIFIED.
+
+=== REPORT (Reporter) ===
+The claim regarding the product category that generated the most revenue was rejected due to a mismatch.
+Delivered orders generated 13,221,498.11 in total revenue.
+
+================================================================================
+
+This is the differentiator in action: the Verifier independently re-checked each
+figure and let only the verified one (13,221,498.11) reach the report, while the
+unverified one was explicitly flagged as rejected rather than presented as fact.
