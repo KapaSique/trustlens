@@ -106,7 +106,7 @@ uv run python src/trustlens/pipeline.py "What are the top 3 product categories b
 uv run python examples/demo_verifier.py                                   # no key needed
 ```
 
-> **Gemini free tier note.** All agents use `gemini-flash-latest`; the API's own rate-limit response reports it as `gemini-3.5-flash`, limited to 5 requests/min and 20/day on the free tier. A full 4-agent run uses ~8–15 calls, so use a paid tier (or Kaggle/Vertex) for repeated runs.
+> **Gemini free tier note.** All agents use `gemini-flash-latest`; the API's own rate-limit response reports it as `gemini-3.5-flash`, limited to 5 requests/min and 20/day on the free tier. A full 4-agent run uses ~8–15 calls, so use a paid tier (or Kaggle/Vertex) for repeated runs. Each agent retries 429/503 with exponential backoff; if the default model is overloaded, switch with `TRUSTLENS_MODEL=gemini-2.5-flash`. A captured live run is in [`examples/sample_pipeline_run.txt`](examples/sample_pipeline_run.txt).
 
 ## Project structure
 
