@@ -15,7 +15,8 @@ from trustlens.verification import verify_numeric_claim
 
 DB_PATH = os.environ.get(
     "TRUSTLENS_DB",
-    str(Path(__file__).resolve().parents[2] / "data" / "trustlens.db"),
+    # this file is src/trustlens/agents/verifier.py -> parents[3] is the repo root
+    str(Path(__file__).resolve().parents[3] / "data" / "trustlens.db"),
 )
 
 

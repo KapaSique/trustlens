@@ -6,9 +6,12 @@ instead of crashing. This keeps the pipeline runnable on the free tier (just
 slower) and is good practice on any tier.
 """
 
+import os
+
 from google.genai import types
 
-MODEL = "gemini-flash-latest"
+# Override with TRUSTLENS_MODEL when the default is overloaded (503) or rate-limited.
+MODEL = os.environ.get("TRUSTLENS_MODEL", "gemini-flash-latest")
 
 
 def resilient_config() -> types.GenerateContentConfig:

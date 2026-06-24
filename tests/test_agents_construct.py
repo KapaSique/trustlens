@@ -47,3 +47,14 @@ def test_verify_claim_tool_confirms_and_catches(tmp_path, monkeypatch):
     assert ok["verified"] is True
     bad = json.loads(verifier_mod.verify_claim("SELECT SUM(price) FROM orders", 999.0))
     assert bad["verified"] is False
+
+
+def test_verifier_default_db_path_resolves_to_repo_root():
+    # regression: verifier.py is in agents/ (one level deeper), so the default
+    # DB path must be parents[3], the repo root — not src/data.
+    from pathlib import Path
+
+    p = Path(verifier_mod.DB_PATH)
+    assert p.name == "trustlens.db"
+    assert p.parent.name == "data"
+    assert (p.parent.parent / "pyproject.toml").exists()

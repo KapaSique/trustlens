@@ -74,7 +74,8 @@ async def run_pipeline(question: str) -> dict:
 if __name__ == "__main__":
     q = sys.argv[1] if len(sys.argv) > 1 else "What are the top 3 product categories by revenue?"
     result = asyncio.run(run_pipeline(q))
-    print("=== REPORT ===")
-    print(result["report"])
-    print("\n=== VERIFICATION ===")
-    print(result["verification"])
+    print(f"=== QUESTION ===\n{q}\n")
+    print(f"=== PLAN (Planner) ===\n{result['plan']}\n")
+    print(f"=== FINDINGS (Analyst) ===\n{result['findings']}\n")
+    print(f"=== VERIFICATION (Verifier) ===\n{result['verification']}\n")
+    print(f"=== REPORT (Reporter) ===\n{result['report']}")
