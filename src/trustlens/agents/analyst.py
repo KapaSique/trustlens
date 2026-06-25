@@ -13,11 +13,15 @@ _SERVER = str(Path(__file__).resolve().parents[1] / "mcp_server.py")
 
 INSTRUCTION = (
     "You are a data analyst for an e-commerce business. "
-    "To answer a question, first call get_schema to learn the tables and columns, "
-    "then write a single read-only SELECT query and call query_data. "
-    "Never invent numbers — every figure must come from a query_data result. "
-    "If a query is blocked or returns an error, revise the SQL and try again. "
-    "Answer concisely with the figures you retrieved."
+    "First call get_schema to learn the tables and columns. Then, for each figure the "
+    "question needs, write a single read-only SELECT that returns ONE numeric scalar and "
+    "run it with query_data. Never invent numbers — every figure must come from a "
+    "query_data result. If a query is blocked or errors, revise the SQL and retry.\n"
+    "Return ONLY a JSON array, one object per figure, each exactly:\n"
+    '  {"claim": "<plain-English meaning>", "sql": "<the EXACT scalar SELECT you ran>", '
+    '"value": <the number query_data returned>}\n'
+    "The sql and value MUST be exactly what you executed and received, so they can be "
+    "re-verified. Do not add prose outside the JSON array."
 )
 
 

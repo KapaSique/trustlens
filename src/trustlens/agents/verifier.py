@@ -30,10 +30,12 @@ def verify_claim(sql: str, claimed_value: float) -> str:
 
 
 INSTRUCTION = (
-    "You are a verification agent. The analyst's findings are in {findings}, each with "
-    "the SQL that produced it and the claimed figure. For EVERY claimed figure, call "
-    "verify_claim with its SQL and value. Summarize which figures were verified and "
-    "which were rejected (mismatch or error). Never accept a number you did not verify."
+    "You are a verification agent. The analyst's findings are in {findings} as a JSON "
+    "array of objects, each with fields: claim, sql, value. For EVERY object, call "
+    "verify_claim passing that object's EXACT sql and value fields verbatim — do NOT "
+    "write or modify any SQL yourself. After checking all of them, summarize which "
+    "figures were verified and which were rejected (mismatch or error), citing the claim. "
+    "Never accept a number you did not verify."
 )
 
 
